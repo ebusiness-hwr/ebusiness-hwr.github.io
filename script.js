@@ -1,3 +1,5 @@
+//Wetter-API aufrufen
+
 let weather = {
     "apiKey": "d62f2715fe700226fb8682e966b851fa",
     fetchWeather: function (city) {
@@ -7,8 +9,15 @@ let weather = {
             + city 
             + "&units=metric&appid=" 
             + this.apiKey
-            ).then((response) => response.json())
-        .then((dataWeather) => this.displayWeather(dataWeather));
+            ).then((response) => {
+                if (!response.ok) {
+                    return Promise.reject(response);
+                }
+                return response.json();
+            })
+            //.then((response) => response.json())
+        .then((dataWeather) => this.displayWeather(dataWeather))
+        .catch(error => alert("Please enter a valid city name."));
     },
     displayWeather: function(dataWeather){
         const { name } = dataWeather;
@@ -19,7 +28,7 @@ let weather = {
         document.querySelector(".city").innerText = "Weather in " + name;
         document.querySelector(".icon").src = "http://openweathermap.org/img/wn/"+ icon +".png";
         document.querySelector(".description").innerText = description;
-        document.querySelector(".temp").innerText = temp + "°C";
+        document.querySelector(".temp").innerText = temp.toFixed() + "°C";
         document.querySelector(".humidity").innerText = "Humidity: " + humidity + "%";
         document.querySelector(".wind").innerText = "Wind speed: " + speed + "km/h";
         document.querySelector(".weather").classList.remove("loading");
@@ -31,6 +40,7 @@ let weather = {
     }
 };
 
+//Funktion des Such-Buttons festlegen:
 document
     .querySelector(".search button")
     .addEventListener("click", function() {
@@ -40,45 +50,54 @@ document
     
     );
 
+//Funktion der Suchleiste festlegen:
 document.querySelector(".search-bar").addEventListener("keyup", function (event) {
     if (event.key == "Enter") {
         weather.search();
         news.search();
+        news.ready();
     }
 }
 )
 
+//News API aufrufen
+
 let news={  
-    "ApiKey": "p1sP8KXdkcmUx8KdRaBbiKoKsWfOi80uCVNypCwM",
+    "ApiKey": "a09ddad9d4542225f719550aa663dd23",
     fetchNews: function (city){
-        var requestOptions = {
-            method: 'GET'
-        }
+        const date = new Date();
+        const currentMonth = date.getMonth()+1;
+        const today = date.getFullYear() + "-" + currentMonth + "-" + date.getDate();
+        //console.log(today);
         fetch(
-            "https://api.thenewsapi.com/v1/news/all?api_token="
-            + this.ApiKey
-            +"&search="
-            + city, requestOptions
+            "https://gnews.io/api/v4/search?q="
+            + city 
+            + "&from="
+            + today
+            +"&token=a09ddad9d4542225f719550aa663dd23&lang=en"
         ).then((response) => response.json())
-        .then((data) => this.displayNews(data));
+        .then((data) => this.displayNews(data))
+        .catch(error => alert("We can not provide news for your requested city."));
     },
     displayNews: function(data){
-        console.log(data.data[0]);
-        const {title} = data.data[0];
-        const {description} = data.data[0];
-        const {source} = data.data[0];
-        const {url} = data.data[0];
-        document.querySelector(".title1").innerText = title;
-        document.querySelector(".description1").innerText = "\n"+ description;
-        document.querySelector(".source1").innerText = "\n Published by: "+ url;
-        //document.querySelector(".newsfeed2").innerText = 
+        //const allArticles = data.articles;
+        //console.log(allArticles);
+        const {title} = data.articles[0];
+        const {description} = data.articles[0];
+        const {publishedAt} = data.articles[0];
+        const {url} = data.articles[0];
+        document.querySelector(".title").innerText = title;
+        document.querySelector(".content").innerText = "\n"+ description;
+        document.querySelector(".sources").innerText = "\n Published on: "+ publishedAt.substring(0, 10) + ", "+ publishedAt.substring(11, 16);
+        document.querySelector(".link").innerText = url;
         document.querySelector(".news").classList.remove("loading");
     },
     search: function () {
         this.fetchNews(document.querySelector(".search-bar").value);
     }
-};
 
+};
+    
 
 //zeigt am Anfang das Wetter von Berlin
 weather.fetchWeather("Berlin");

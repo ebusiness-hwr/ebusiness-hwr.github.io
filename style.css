@@ -30,7 +30,7 @@ body {
     justify-content: center;
 }
 
-.button1 {
+button {
     margin: 0.5em;
     border-radius: 50%;
     border: none;
@@ -55,7 +55,7 @@ input.search-bar {
     width: calc(100% - 100px)
 }
 
-button1:hover {
+button:hover {
     background: #7c7c7c6b;
 }
 
@@ -106,14 +106,34 @@ weather.loading:after{
     color: black;
   }
 
-.title1 {
+.title {
  font-weight: bold;
 }
 
-.description1 {
+.content {
     font-size: smaller;
 }
 
-.source1 {
+.sources {
     font-size: small;
 }
+
+.link {
+    font-size: small;
+}
+
+/*
+button.changeNewsLeft {
+    display: block;
+  margin-left: auto;
+  margin-right: 4.4em;
+  margin-top: 0em;
+}
+
+button.changeNewsRight {
+    display: block;
+  margin-left: auto;
+  margin-right: 0;
+  margin-top: -5em;
+}
+*/
