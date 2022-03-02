@@ -32,7 +32,7 @@ let weather = {
         document.querySelector(".humidity").innerText = "Humidity: " + humidity + "%";
         document.querySelector(".wind").innerText = "Wind speed: " + speed + "km/h";
         document.querySelector(".weather").classList.remove("loading");
-        document.body.style.backgroundImage = "url('https://source.unsplash.com/random/1600x900/?" + name+ "')";
+        document.body.style.backgroundImage = "url('https://source.unsplash.com/random/1600x900/?" + name+ ",nature')";
         document.querySelector(".regionalnews").innerText = "News of "+ name;
     },
     search: function () {
